@@ -142,7 +142,7 @@ def evaluate_employee(
             trace,
         )
 
-    candidates = tuple(
+    effective_rules = tuple(
         sorted(
             (
                 rule
@@ -150,6 +150,24 @@ def evaluate_employee(
                 if rule.jurisdiction in eligible_jurisdictions
                 and rule.effective_date <= evaluation_date
             ),
+            key=lambda rule: (rule.jurisdiction, rule.effective_date, rule.rule_id),
+        )
+    )
+    latest_by_jurisdiction: dict[str, list[MinimumWageRule]] = {}
+    for name in eligible_jurisdictions:
+        jurisdiction_rules = [
+            rule for rule in effective_rules if rule.jurisdiction == name
+        ]
+        if jurisdiction_rules:
+            latest_date = max(rule.effective_date for rule in jurisdiction_rules)
+            latest_by_jurisdiction[name] = [
+                rule
+                for rule in jurisdiction_rules
+                if rule.effective_date == latest_date
+            ]
+    candidates = tuple(
+        sorted(
+            (rule for group in latest_by_jurisdiction.values() for rule in group),
             key=lambda rule: (rule.jurisdiction, rule.effective_date, rule.rule_id),
         )
     )

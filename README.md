@@ -1,8 +1,8 @@
-# Atlas Compliance — Milestones 1–2
+# Atlas Compliance — Milestones 1–3
 
 Atlas is a deterministic prototype for evaluating minimum-wage compliance. This
 project contains a Python calculation engine, approved rule data, an XLSX loader,
-and a regulatory source monitoring layer.
+and a regulatory source monitoring and human-reviewed rule lifecycle.
 
 ## Privacy boundary
 
@@ -76,11 +76,103 @@ and their distinct hashes remain preserved.
 
 All webpage content is treated as untrusted data. Atlas never executes code,
 commands, prompts, or instructions found in fetched pages. This milestone only
-detects source changes: it does **not** interpret legal meaning, approve or
-activate rules, modify `approved_rules.json`, or re-evaluate employees.
+detects source changes; monitoring itself does not approve or activate rules.
 
 Run the complete offline test suite with:
 
 ```powershell
 .venv\Scripts\python.exe -m pytest -q -p no:cacheprovider
 ```
+
+## Proposed rules and human review
+
+Milestone 3 adds a deterministic, testable interpretation boundary. It classifies
+saved source text as `FINAL_RULE`, `PROPOSED_RULE`, `CORRECTION`,
+`INTERPRETIVE_GUIDANCE`, `INFORMATIONAL`, `IRRELEVANT`, or `AMBIGUOUS` and stores
+the source evidence in a structured proposal. Parsing is deliberately narrow:
+it recognizes stable notice IDs, explicit wage amounts, dates, and known status
+phrases. Missing or uncertain information remains `REVIEW_REQUIRED`.
+
+The lifecycle is:
+
+```text
+snapshot -> deterministic interpretation -> REVIEW_REQUIRED proposal
+         -> explicit approve/reject -> versioned approved registry
+         -> targeted deterministic reevaluation -> append-only audit
+```
+
+Regulatory content can only propose a rule. Only the explicit operator `approve`
+command can append a complete `FINAL_RULE` to `data/approved_rules.json`.
+Proposals, corrections, guidance, news, ambiguous text, and instruction-like
+webpage content never self-activate. Reprocessing the same notice and approving
+the same proposal are idempotent.
+
+Approved records retain the proposal ID, source ID and URL, snapshot path and
+hash, approval timestamp, and reviewer note. Historical rule versions remain in
+the registry. For each jurisdiction, the compliance engine selects the latest
+version effective on the evaluation date. A future-effective approved rule is
+therefore preserved but cannot apply early.
+
+### Targeted reevaluation
+
+A federal wage rule selects employees in Federal Territory and Bellwether because
+the federal rule can be a candidate in both. A Bellwether rule selects only
+Bellwether employees. Before/after results contain employee ID and compliance
+fields only; the calculation itself is still performed exclusively by the
+Milestone 1 deterministic engine. Audit events record aggregate affected counts,
+not employee PII.
+
+### Operator demonstration
+
+First monitor the trusted sources if snapshots do not already exist:
+
+```powershell
+.venv\Scripts\python.exe -m atlas_compliance.monitor --timeout 30
+```
+
+Choose a saved snapshot and interpret it. Replace `<snapshot.html>` with an
+actual path under `data/snapshots/asteria_federal/` or
+`data/snapshots/bellwether_state/`:
+
+```powershell
+.venv\Scripts\python.exe -m atlas_compliance.rules_cli discover `
+  asteria_federal <snapshot.html>
+.venv\Scripts\python.exe -m atlas_compliance.rules_cli list
+.venv\Scripts\python.exe -m atlas_compliance.rules_cli show <proposal_id>
+```
+
+Explicitly approve or reject after reviewing the evidence:
+
+```powershell
+.venv\Scripts\python.exe -m atlas_compliance.rules_cli approve `
+  <proposal_id> --note "Reviewed against published final notice"
+.venv\Scripts\python.exe -m atlas_compliance.rules_cli reject `
+  <proposal_id> --note "Not an active wage rule"
+```
+
+After approval, run targeted reevaluation on or after the rule's effective date:
+
+```powershell
+.venv\Scripts\python.exe -m atlas_compliance.rules_cli reevaluate `
+  <proposal_id> --evaluation-date 2027-01-01
+Get-Content data\approved_rules.json
+Get-Content data\audit.jsonl
+```
+
+Generated proposal indexes, audit logs, reevaluation output, source snapshots,
+and change records are ignored by Git. Changes to the approved registry are
+intentional operator actions and should be reviewed before committing.
+
+## Architecture and trust boundaries
+
+- `loader.py` reads only the 11 employee fields needed for compliance.
+- `monitoring.py` fetches only two allowlisted sources and preserves raw evidence.
+- `regulatory.py` deterministically classifies untrusted text into proposals.
+- `workflow.py` implements explicit review, versioned approval, targeted
+  reevaluation, and append-only audit events.
+- `engine.py` alone calculates employee compliance from approved rules.
+- `rules_cli.py` exposes the operator workflow; it has no automatic approval path.
+
+The salary conversion remains the prototype assumption documented above:
+annual salary divided by `52 * scheduled_hours_per_week`. Atlas is a focused
+assessment prototype, not a complete legal interpretation or payroll system.
