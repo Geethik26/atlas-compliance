@@ -1,0 +1,20 @@
+[
+  {
+    "jurisdiction": "Asteria Federal",
+    "amount": "12.82",
+    "currency": "AST",
+    "unit": "hour",
+    "effective_date": "2026-09-16",
+    "rule_id": "AFWA-MW-2026.1",
+    "coverage": "Covered, nonexempt employees"
+  },
+  {
+    "jurisdiction": "Bellwether",
+    "amount": "16.87",
+    "currency": "AST",
+    "unit": "hour",
+    "effective_date": "2026-09-16",
+    "rule_id": "BDL-MW-2026.1",
+    "coverage": "Covered, nonexempt employees"
+  }
+]
