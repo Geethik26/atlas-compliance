@@ -1,8 +1,8 @@
-# Atlas Compliance — Milestone 1
+# Atlas Compliance — Milestones 1–2
 
 Atlas is a deterministic prototype for evaluating minimum-wage compliance. This
-milestone contains only a Python calculation engine, approved rule data, an XLSX
-loader, tests, and a batch CLI.
+project contains a Python calculation engine, approved rule data, an XLSX loader,
+and a regulatory source monitoring layer.
 
 ## Privacy boundary
 
@@ -43,4 +43,44 @@ that could affect a production compliance analysis.
   --employees data/synthetic_employee_system_of_record.xlsx `
   --rules data/approved_rules.json `
   --evaluation-date 2026-09-16
+```
+
+## Regulatory source monitoring
+
+Milestone 2 monitors only these configured trusted sources:
+
+- Asterian Federal Wage Authority:
+  `https://asterian-federal-wage-site.vercel.app/`
+- Bellwether Department of Labor:
+  `https://bellwether-state-wage-site.vercel.app/`
+
+Run both checks from the repository root:
+
+```powershell
+.venv\Scripts\python.exe -m atlas_compliance.monitor
+```
+
+Each successful fetch stores untouched raw HTML in
+`data/snapshots/<source_id>/` and a JSON metadata sidecar containing its UTC
+fetch time, HTTP status, SHA-256 hash, source identity, URL, and evidence path.
+Files are created exclusively and are never overwritten. A failed fetch does
+not write or replace successful evidence.
+
+Atlas compares normalized visible text with the immediately previous successful
+snapshot. The result is `FIRST_SNAPSHOT`, `UNCHANGED`, `CHANGED`, or
+`FETCH_FAILED`. A genuine visible-text change creates a JSON record under
+`data/changes/<source_id>/` containing both raw-content hashes, both snapshot
+paths, detection time, and a readable unified diff. Markup-only differences are
+not treated as meaningful regulatory change events, though both raw snapshots
+and their distinct hashes remain preserved.
+
+All webpage content is treated as untrusted data. Atlas never executes code,
+commands, prompts, or instructions found in fetched pages. This milestone only
+detects source changes: it does **not** interpret legal meaning, approve or
+activate rules, modify `approved_rules.json`, or re-evaluate employees.
+
+Run the complete offline test suite with:
+
+```powershell
+.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider
 ```
