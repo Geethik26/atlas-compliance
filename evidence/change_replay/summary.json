@@ -1,0 +1,17 @@
+{
+  "approved_amount": "13.25",
+  "approved_effective_date": "2027-01-01",
+  "approved_rule_id": "AFWA-2026-0042",
+  "audit_path": "audit.jsonl",
+  "change_record_path": "changes/asteria_federal/20261215T120500.000000Z.change.json",
+  "changed_result_count": 24,
+  "evaluation_date": "2027-01-01",
+  "first_monitoring_state": "FIRST_SNAPSHOT",
+  "proposal_id": "proposal-ddd272d64c22d8c5def8",
+  "proposal_initial_status": "REVIEW_REQUIRED",
+  "reevaluation_path": "reevaluation.json",
+  "second_monitoring_state": "CHANGED",
+  "simulation": true,
+  "source_id": "asteria_federal",
+  "targeted_employee_count": 48
+}

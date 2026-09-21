@@ -1,0 +1,9 @@
+{
+  "detected_at": "2026-12-15T12:05:00+00:00",
+  "new_hash": "c0d23a1d348fc0242d7b40b9ccb0f6ce3f4fafde17c4e863e9ea6b3ec7bb696c",
+  "new_snapshot_path": "snapshots/asteria_federal/20261215T120500.000000Z.html",
+  "previous_hash": "a18f2052fb63a5296eafe37844fd89a89ccda7944edf02d6a8b0a7730f566306",
+  "previous_snapshot_path": "snapshots/asteria_federal/20261215T120000.000000Z.html",
+  "source_id": "asteria_federal",
+  "text_diff": "--- snapshots/asteria_federal/20261215T120000.000000Z.html\n+++ snapshots/asteria_federal/20261215T120500.000000Z.html\n@@ -1,7 +1,13 @@\n-Asterian Federal Wage Authority \u2014 Before\n+Asterian Federal Wage Authority \u2014 After\n Asterian Federal Wage Authority\n Current general rate\n 12.82 AST per hour\n Effective September 16, 2026\n Covered, nonexempt employees\n Rule ID AFWA-MW-2026.1\n+Final notice\n+August 5, 2026\n+AFWA-2026-0042\n+Minimum Wage Rate for Covered Employees \u2014 2027\n+The Asterian federal minimum wage for covered, nonexempt employees will increase to 13.25 AST per hour effective January 1, 2027.\n+Human approval required before rule activation."
+}

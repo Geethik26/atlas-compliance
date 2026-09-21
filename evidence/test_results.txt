@@ -1,0 +1,19 @@
+Atlas automated test verification
+Source commit: fcab9dd9476db4ec1da011d71657206be7c8257c
+
+Environment:
+  Python 3.12.14
+  pytest 9.1.1
+  openpyxl 3.1.5
+
+Command (run from repository root):
+  python -m pytest -q -p no:cacheprovider
+
+The review environment supplied pytest through an isolated dependency directory
+on PYTHONPATH; no application source or test files were changed for this run.
+
+Captured stdout:
+.......................................................                  [100%]
+55 passed in 0.52s
+
+Exit code: 0

@@ -10,6 +10,10 @@ For submission and demonstration, see the
 [reviewer walkthrough](docs/walkthrough.md) and
 [submission notes](docs/submission_notes.md).
 
+The [committed verification and audit evidence](evidence/README.md) includes a
+55-test passing result and the complete simulated change replay: snapshots,
+diff, reviewed proposal, versioned registry, and employee reevaluation.
+
 Run the tracked fictional change replay to generate a complete, isolated evidence
 package without modifying the real approved registry:
 

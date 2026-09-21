@@ -1,0 +1,25 @@
+[
+  {
+    "amount": "13.25",
+    "certainty": "HIGH",
+    "classification": "FINAL_RULE",
+    "coverage": "Covered, nonexempt employees",
+    "created_at": "2026-12-15T12:05:00+00:00",
+    "currency": "AST",
+    "effective_date": "2027-01-01",
+    "evidence_text": "Final notice\nAugust 5, 2026\nAFWA-2026-0042\nMinimum Wage Rate for Covered Employees \u2014 2027\nThe Asterian federal minimum wage for covered, nonexempt employees will increase to 13.25 AST per hour effective January 1, 2027.\nHuman approval required before rule activation.",
+    "interpretation_notes": "Deterministic phrase and field extraction; human approval required.",
+    "jurisdiction": "Asteria Federal",
+    "proposal_id": "proposal-ddd272d64c22d8c5def8",
+    "publication_date": "2026-08-05",
+    "reviewed_at": "2026-12-15T12:10:00+00:00",
+    "reviewer_note": "Approved in reproducible fictional demo",
+    "source_hash": "c0d23a1d348fc0242d7b40b9ccb0f6ce3f4fafde17c4e863e9ea6b3ec7bb696c",
+    "source_id": "asteria_federal",
+    "source_notice_id": "AFWA-2026-0042",
+    "source_snapshot_path": "evidence/change_replay/snapshots/asteria_federal/20261215T120500.000000Z.html",
+    "source_url": "https://asterian-federal-wage-site.vercel.app/",
+    "status": "APPROVED",
+    "unit": "hour"
+  }
+]
