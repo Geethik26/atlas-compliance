@@ -10,7 +10,7 @@ employee reevaluation.
 The implementation intentionally favors a trustworthy working slice over
 production breadth. It includes a hosted review UI and isolated durable demo sessions. It does not include enterprise authentication or a production scheduler.
 
-Live prototype: <https://atlas-compliance-geethik.geethikkancharla99.chatgpt.site>
+Live prototype: <https://atlas-compliance.geethikkancharla99.chatgpt.site>
 
 ## Time spent
 

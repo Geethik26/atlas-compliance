@@ -5,7 +5,7 @@ the hosted prototype first, then use the repository commands below for the
 deterministic engine and evidence. Run commands from the repository root.
 
 Hosted prototype:
-<https://atlas-compliance-geethik.geethikkancharla99.chatgpt.site>
+<https://atlas-compliance.geethikkancharla99.chatgpt.site>
 
 ## Before recording
 

@@ -4,7 +4,7 @@ Atlas is a deterministic prototype for evaluating minimum-wage compliance. This
 project contains a Python calculation engine, approved rule data, an XLSX loader,
 and a regulatory source monitoring and human-reviewed rule lifecycle.
 
-**Live prototype:** <https://atlas-compliance-geethik.geethikkancharla99.chatgpt.site>
+**Live prototype:** <https://atlas-compliance.geethikkancharla99.chatgpt.site>
 
 The prototype is public for assessment review and uses fictional data only. Open
 **Simulated replay** to stage, review, approve, and audit a complete change. Open
