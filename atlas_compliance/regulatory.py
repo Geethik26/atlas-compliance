@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 from dataclasses import asdict, dataclass
 from datetime import date, datetime, timezone
@@ -145,7 +146,10 @@ MONTH_DATE = re.compile(
 def _parse_date(match: re.Match[str] | None) -> date | None:
     if match is None:
         return None
-    return datetime.strptime(match.group(0), "%B %d, %Y").date()
+    try:
+        return datetime.strptime(match.group(0), "%B %d, %Y").date()
+    except ValueError:
+        return None
 
 
 def _classify(text: str) -> ContentClassification:
@@ -199,6 +203,30 @@ def _notice_blocks(text: str) -> list[tuple[str | None, str]]:
     return blocks
 
 
+
+def _current_rate_card(source: SourceConfig, text: str) -> tuple[str, str] | None:
+    """Extract only the authority's own current-rate card, without schedules."""
+    start_marker = "Current general rate" if source.source_id == "asteria_federal" else "State minimum wage"
+    if start_marker not in text:
+        return None
+    section = text.split(start_marker, 1)[1]
+    end = re.search(r"(?:AFWA|BDL)-MW-[\w.]+", section)
+    if not end:
+        return None
+    card = section[:end.end()]
+    rate = RATE.search(card)
+    effective = re.search(r"Effective\s+" + MONTH_DATE.pattern, card, re.I)
+    if not rate or not effective:
+        return None
+    # Include the exact card text. Its state/federal comparison is not a notice.
+    own_rate = f"{rate.group(1)} {rate.group(2)} per hour"
+    evidence = (f"Final notice: current published rate card\n{end.group(0)}\n"
+                f"Minimum wage {own_rate} effective {MONTH_DATE.search(effective.group(0)).group(0)}.\n")
+    if "covered, nonexempt employees" in card.casefold():
+        evidence += "Covered, nonexempt employees\n"
+    return end.group(0), evidence
+
+
 def interpret_text(
     source: SourceConfig,
     text: str,
@@ -216,20 +244,30 @@ def interpret_text(
         if "covered, nonexempt employees" in text.casefold()
         else None
     )
-    for notice_id, evidence in _notice_blocks(text):
+    blocks = _notice_blocks(text)
+    card = _current_rate_card(source, text)
+    if card is not None:
+        if all(notice_id is None for notice_id, _ in blocks):
+            blocks = []
+        blocks.insert(0, card)
+    for notice_id, evidence in blocks:
         classification = _classify(evidence)
         rate = RATE.search(evidence)
         effective_match = re.search(
             r"effective\s+" + MONTH_DATE.pattern, evidence, re.I
         )
-        publication_matches = list(MONTH_DATE.finditer(evidence))
+        # Only an explicitly labeled date or a standalone notice-header date
+        # may establish publication. Effective dates never fill this field.
+        published_match = re.search(r"(?:publication date|published(?: on)?)\s*:?\s*" + MONTH_DATE.pattern, evidence, re.I)
+        header = evidence.split(notice_id, 1)[0] if notice_id else ""
+        header_date = next((MONTH_DATE.fullmatch(line.strip()) for line in header.splitlines() if MONTH_DATE.fullmatch(line.strip())), None)
         effective_date = (
             _parse_date(MONTH_DATE.search(effective_match.group(0)))
             if effective_match
             else None
         )
         publication_date = _parse_date(
-            publication_matches[0] if publication_matches else None
+            MONTH_DATE.search(published_match.group(0)) if published_match else header_date
         )
         amount: Decimal | None = None
         currency: str | None = None
@@ -241,10 +279,6 @@ def interpret_text(
                 amount = None
             currency = rate.group(2).upper()
             unit = "hour"
-        identity = notice_id or hashlib.sha256(evidence.encode("utf-8")).hexdigest()
-        proposal_id = "proposal-" + hashlib.sha256(
-            f"{source.source_id}|{identity}".encode("utf-8")
-        ).hexdigest()[:20]
         coverage = (
             "Covered, nonexempt employees"
             if "covered, nonexempt employees" in evidence.casefold()
@@ -262,6 +296,7 @@ def interpret_text(
                 unit,
                 effective_date,
                 coverage,
+                publication_date,
             )
         )
         certainty = "HIGH" if required_complete else "REVIEW"
@@ -278,6 +313,17 @@ def interpret_text(
                 " Coverage was inherited from the explicit page-level "
                 "'Covered, nonexempt employees' statement."
             )
+        if publication_date is None:
+            notes += " Publication date is not stated; do not infer it from the effective date."
+        if notice_id and "-MW-" in notice_id:
+            notes += " Current-rate card: observed effective date, not an inferred publication date."
+        rates = {(m.group(1), m.group(2).upper()) for m in RATE.finditer(evidence)}
+        if len(rates) > 1 and classification is ContentClassification.FINAL_RULE:
+            amount = None
+            certainty = "REVIEW"
+            notes += " Multiple wage amounts require manual interpretation."
+        identity = json.dumps([source.source_id, notice_id, " ".join(evidence.split()), coverage], ensure_ascii=False)
+        proposal_id = "proposal-" + hashlib.sha256(identity.encode()).hexdigest()[:20]
         proposals.append(
             ProposedRule(
                 proposal_id=proposal_id,
@@ -302,3 +348,4 @@ def interpret_text(
             )
         )
     return proposals
+

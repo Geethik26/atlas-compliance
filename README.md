@@ -1,8 +1,15 @@
-# Atlas Compliance — Milestones 1–3
+# Atlas Compliance
 
 Atlas is a deterministic prototype for evaluating minimum-wage compliance. This
 project contains a Python calculation engine, approved rule data, an XLSX loader,
 and a regulatory source monitoring and human-reviewed rule lifecycle.
+
+**Live prototype:** <https://atlas-compliance-geethik.geethikkancharla99.chatgpt.site>
+
+The prototype is public for assessment review and uses fictional data only. Open
+**Simulated replay** to stage, review, approve, and audit a complete change. Open
+**Live sources** to inspect captured evidence; live proposals are never approved
+automatically.
 
 See [the regulatory research memo](docs/research_memo.md) for source authority,
 precedence, effective-date, correction, retroactivity, and operational reasoning.
@@ -11,7 +18,7 @@ For submission and demonstration, see the
 [submission notes](docs/submission_notes.md).
 
 The [committed verification and audit evidence](evidence/README.md) includes a
-55-test passing result and the complete simulated change replay: snapshots,
+passing automated test record and the complete simulated change replay: snapshots,
 diff, reviewed proposal, versioned registry, and employee reevaluation.
 
 Run the tracked fictional change replay to generate a complete, isolated evidence
@@ -23,6 +30,33 @@ package without modifying the real approved registry:
 
 The replay fixtures live under `demo/fixtures/`. Generated evidence is written to
 the ignored `demo_output/` directory.
+
+## Fresh-clone setup
+
+Requires Python 3.11 or later.
+
+```sh
+git clone https://github.com/Geethik26/atlas-compliance.git
+cd atlas-compliance
+python -m venv .venv
+# Windows PowerShell: .venv\Scripts\Activate.ps1
+# macOS/Linux: source .venv/bin/activate
+python -m pip install -e ".[dev]"
+python -m pytest -q -p no:cacheprovider
+python -m atlas_compliance.demo --output demo_output
+```
+
+## Live and simulated data
+
+`data/approved_rules.json` intentionally starts empty. The old historical rates
+were not backed by saved source evidence, so they now live only in
+`data/demo_baseline_rules.json` as **simulated replay inputs**. A live evaluation
+without approved rules returns `INSUFFICIENT_DATA`, never an invented pass.
+Use `--rules data/demo_baseline_rules.json` only for a labeled simulation.
+Real source snapshots and **unapproved** extracted proposals are preserved under
+`evidence/live_sources/`. They were fetched directly from the two designated
+sandbox URLs; the actual fetch timestamps and hashes are in their sidecars.
+No publication schedule or future-rate database is inspected or used.
 
 ## Privacy boundary
 

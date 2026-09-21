@@ -51,3 +51,4 @@ def write_csv_report(results: list[EvaluationResult], path: Path) -> None:
                 for key, value in row.items()
             }
             writer.writerow(flattened)
+

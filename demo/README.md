@@ -28,3 +28,4 @@ demo_output/
 
 The command refuses to overwrite an existing output directory. The output is
 ignored by Git and the real `data/approved_rules.json` is copied, never modified.
+

@@ -31,7 +31,7 @@ def export_dir() -> Path:
 @pytest.fixture
 def results() -> list[EvaluationResult]:
     employees = load_employees(Path("data/synthetic_employee_system_of_record.xlsx"))
-    rules = load_rules(Path("data/approved_rules.json"))
+    rules = load_rules(Path("data/demo_baseline_rules.json"))
     return [
         evaluate_employee(employee, rules, date(2026, 9, 16))
         for employee in employees
@@ -79,3 +79,4 @@ def test_report_contains_no_unnecessary_employee_pii(
         "emergency_contact",
     )
     assert all(field not in serialized for field in forbidden)
+

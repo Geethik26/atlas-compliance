@@ -1,0 +1,8 @@
+{
+  "fetched_at": "2026-09-21T16:05:20.135764+00:00",
+  "http_status": 200,
+  "sha256": "c41130a5c4a430ea7907580f35b05fed6b4fc629497b2b009ad856aa11e92de3",
+  "snapshot_path": "snapshots/bellwether_state/20260921T160520.135764Z.html",
+  "source_id": "bellwether_state",
+  "source_url": "https://bellwether-state-wage-site.vercel.app/"
+}

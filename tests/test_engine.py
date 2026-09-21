@@ -1,7 +1,7 @@
 """Tests for deterministic minimum-wage decisions."""
 
 from dataclasses import replace
-from datetime import date
+from datetime import date, datetime, timezone
 from decimal import Decimal
 from pathlib import Path
 
@@ -174,8 +174,8 @@ def test_missing_applicable_rule(
 def test_deterministic_repeated_evaluation(
     employee: Employee, rules: list[MinimumWageRule]
 ) -> None:
-    first = evaluate_employee(employee, rules, EVALUATION_DATE)
-    second = evaluate_employee(employee, rules, EVALUATION_DATE)
+    first = evaluate_employee(employee, rules, EVALUATION_DATE, evaluated_at=datetime(2026, 9, 21, tzinfo=timezone.utc))
+    second = evaluate_employee(employee, rules, EVALUATION_DATE, evaluated_at=first.evaluation_timestamp)
     assert first == second
     assert first.to_dict() == second.to_dict()
 
@@ -190,16 +190,17 @@ def test_conflicting_currency_requires_review(
 
 
 def test_seeded_rule_provenance_is_exposed_in_result(employee: Employee) -> None:
-    rules = load_rules(Path("data/approved_rules.json"))
+    rules = load_rules(Path("data/demo_baseline_rules.json"))
     result = evaluate_employee(employee, rules, EVALUATION_DATE)
     serialized = result.to_dict()
     assert serialized["controlling_source_url"] == (
         "https://asterian-federal-wage-site.vercel.app/"
     )
     assert serialized["controlling_evidence_text"] == (
-        "Assignment-provided approved baseline: 12.82 AST per hour effective "
-        "2026-09-16."
+        "Simulated replay baseline: 12.82 AST per hour effective "
+        "2026-09-16; not verified historical source evidence."
     )
     assert serialized["candidate_applicable_rules"][0]["source_url"] == (
         serialized["controlling_source_url"]
     )
+

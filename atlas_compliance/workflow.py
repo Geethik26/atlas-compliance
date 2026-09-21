@@ -186,13 +186,22 @@ def approve_proposal(
         )
     assert proposal.amount is not None
     assert proposal.effective_date is not None
+    prior = [item for item in registry
+             if item.get("source_notice_id", item["rule_id"]) == proposal.source_notice_id
+             and item["jurisdiction"] == proposal.jurisdiction]
+    same_date = [item for item in prior if item["effective_date"] == proposal.effective_date.isoformat()]
+    supersedes = same_date[-1]["rule_id"] if same_date else None
+    version_id = proposal.source_notice_id if not prior else f"{proposal.source_notice_id}:rev:{proposal.proposal_id.removeprefix('proposal-')}"
     approved: dict[str, Any] = {
         "jurisdiction": proposal.jurisdiction,
         "amount": str(proposal.amount),
         "currency": proposal.currency,
         "unit": proposal.unit,
         "effective_date": proposal.effective_date.isoformat(),
-        "rule_id": proposal.source_notice_id,
+        "rule_id": version_id,
+        "source_notice_id": proposal.source_notice_id,
+        "supersedes_rule_id": supersedes,
+        "publication_date": None if proposal.publication_date is None else proposal.publication_date.isoformat(),
         "coverage": proposal.coverage,
         "proposal_id": proposal.proposal_id,
         "source_id": proposal.source_id,
@@ -226,7 +235,7 @@ def approve_proposal(
         timestamp=timestamp,
         source_id=proposal.source_id,
         proposal_id=proposal_id,
-        rule_id=proposal.source_notice_id,
+        rule_id=version_id,
         source_snapshot_path=proposal.source_snapshot_path,
         source_hash=proposal.source_hash,
         reviewer_note=reviewer_note,
@@ -363,3 +372,4 @@ def reevaluate_affected_employees(
         affected_employee_count=len(results),
     )
     return results
+

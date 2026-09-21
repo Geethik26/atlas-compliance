@@ -8,12 +8,15 @@ source monitoring through human-reviewed rule approval and deterministic
 employee reevaluation.
 
 The implementation intentionally favors a trustworthy working slice over
-production breadth. It does not include a web UI, authentication, cloud
-infrastructure, or a production scheduler.
+production breadth. It includes a hosted review UI and isolated durable demo sessions. It does not include enterprise authentication or a production scheduler.
+
+Live prototype: <https://atlas-compliance-geethik.geethikkancharla99.chatgpt.site>
 
 ## Time spent
 
-**Total:** 11 hours
+**Previously recorded development time:** 11 hours.
+
+Additional AI-assisted completion work added the hosted interface, regression fixes, and submission evidence. That additional time was not measured; the earlier 11 hours must not be presented as the final total.
 
 ## What is simulated
 
@@ -29,7 +32,7 @@ infrastructure, or a production scheduler.
 - Reevaluation is operator-triggered; production scheduling is not implemented.
 - The salary hourly-equivalent calculation is a documented prototype assumption.
 
-No paid AI service or external LLM API is used. Regulatory interpretation is
+No paid AI service or external LLM API is used at runtime. AI coding assistance was used to develop and review the implementation. Regulatory interpretation is
 deterministic and testable. The architecture leaves a boundary where an
 AI-assisted extractor could later propose fields, but human approval and
 deterministic compliance decisions would remain mandatory.
@@ -59,7 +62,7 @@ Generate the employee compliance export:
 ```powershell
 python -m atlas_compliance.cli `
   --employees data/synthetic_employee_system_of_record.xlsx `
-  --rules data/approved_rules.json `
+  --rules data/demo_baseline_rules.json `
   --evaluation-date 2026-09-16 `
   --output outputs/compliance_results_2026-09-16.json `
   --format json
@@ -82,6 +85,8 @@ python -m atlas_compliance.cli `
 - Regulatory interpretation memo
 - Reviewer walkthrough
 - Automated tests
+- Hosted operator interface with isolated live and simulated workspaces
+- Durable anonymous demo sessions and evidence export
 
 ## Key assumptions
 
@@ -132,3 +137,21 @@ history where possible, and reevaluate affected periods after review.
 Jurisdiction applicability should move to configured legal-scope relationships.
 New compliance domains should have separate deterministic engines and schemas
 rather than adding unrelated arithmetic to the minimum-wage engine.
+
+
+
+## Final prototype boundaries
+
+- `data/approved_rules.json` starts empty; actual captured source proposals await
+  a human reviewer. No agent silently approves live extracted rules.
+- `data/demo_baseline_rules.json` contains explicitly simulated historical rates.
+  Earlier references calling them assignment-approved were corrected.
+- The hosted UI uses the same Python modules through a self-hosted Pyodide runtime.
+- Live and replay workspaces are isolated. Approval immediately triggers targeted
+  reevaluation on the selected date. Future rules never apply before their date.
+- D1 stores append-only versions of each anonymous demo session; this is not a
+  secure server-side payroll execution environment.
+- Source checks and date changes are operator-triggered. There is no background
+  scheduling, missed-publication backfill, or complete retroactive payroll replay.
+- Export evidence before clearing browser cookies: the session cookie provides
+  access to that browser's saved fictional workspace.

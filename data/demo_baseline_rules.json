@@ -1,0 +1,32 @@
+[
+  {
+    "jurisdiction": "Asteria Federal",
+    "amount": "12.82",
+    "currency": "AST",
+    "unit": "hour",
+    "effective_date": "2026-09-16",
+    "rule_id": "AFWA-MW-2026.1",
+    "coverage": "Covered, nonexempt employees",
+    "source_url": "https://asterian-federal-wage-site.vercel.app/",
+    "source_snapshot_path": null,
+    "source_hash": null,
+    "evidence_text": "Simulated replay baseline: 12.82 AST per hour effective 2026-09-16; not verified historical source evidence.",
+    "proposal_id": null,
+    "simulation": true
+  },
+  {
+    "jurisdiction": "Bellwether",
+    "amount": "16.87",
+    "currency": "AST",
+    "unit": "hour",
+    "effective_date": "2026-09-16",
+    "rule_id": "BDL-MW-2026.1",
+    "coverage": "Covered, nonexempt employees",
+    "source_url": "https://bellwether-state-wage-site.vercel.app/",
+    "source_snapshot_path": null,
+    "source_hash": null,
+    "evidence_text": "Simulated replay baseline: 16.87 AST per hour effective 2026-09-16; not verified historical source evidence.",
+    "proposal_id": null,
+    "simulation": true
+  }
+]

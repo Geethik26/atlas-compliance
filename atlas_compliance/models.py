@@ -51,6 +51,8 @@ class MinimumWageRule:
     source_hash: str | None = None
     evidence_text: str | None = None
     proposal_id: str | None = None
+    supersedes_rule_id: str | None = None
+    publication_date: str | None = None
 
     def public_dict(self) -> dict[str, str | None]:
         """Return stable fields suitable for an audit trace."""
@@ -67,6 +69,8 @@ class MinimumWageRule:
             "source_hash": self.source_hash,
             "evidence_text": self.evidence_text,
             "proposal_id": self.proposal_id,
+            "supersedes_rule_id": self.supersedes_rule_id,
+            "publication_date": self.publication_date,
         }
 
 
@@ -124,3 +128,4 @@ class EvaluationResult:
             "explanation": list(self.explanation),
             "evaluation_timestamp": self.evaluation_timestamp.isoformat(),
         }
+

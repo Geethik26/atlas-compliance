@@ -31,17 +31,22 @@ rule or invoke an operator command.
 
 ## Evidence reviewed
 
-The assignment supplied the initial approved baseline:
+The original prototype seeded the following historical rates without retained source snapshots. They are now isolated as simulated replay inputs, not live approved rules:
 
 | Jurisdiction | Rate | Effective date | Rule ID |
 |---|---:|---|---|
 | Asteria Federal | 12.82 AST/hour | 2026-09-16 | `AFWA-MW-2026.1` |
 | Bellwether | 16.87 AST/hour | 2026-09-16 | `BDL-MW-2026.1` |
 
-These records are labeled as assignment-provided baselines. They include the
-designated source URL but no fabricated snapshot path or hash.
+These records are labeled as simulated baselines. The live approved registry starts empty. No historical snapshot or approval is fabricated.
 
-Saved source snapshots fetched on 2026-09-18 contained these publications:
+Saved source snapshots fetched on 2026-09-21 contained the current rate cards
+and these publications:
+
+| Source | Current displayed rate | Effective date |
+|---|---:|---|
+| Asterian Federal Wage Authority | 12.85 AST/hour | 2026-09-21 |
+| Bellwether Department of Labor | 16.90 AST/hour | 2026-09-21 |
 
 | Notice | Classification | Interpretation |
 |---|---|---|
@@ -180,9 +185,7 @@ defines the affected population and evaluation periods.
 
 ## Corrections versus duplicates
 
-Stable proposal identity uses source ID plus notice ID where available. Repeated
-processing of the same notice does not create duplicate proposals. Approval of
-the same proposal is also idempotent.
+Proposal identity includes source identity, notice identity, normalized notice evidence, and coverage. Identical evidence is idempotent; changed text under the same notice ID produces a new review-required revision. Explicit approval appends a unique rule version. For a same-date revision of the same notice, supersedes_rule_id links the replaced version, which remains in history. Unrelated same-date conflicts still require review.
 
 Duplicate suppression does not delete evidence. Every successful monitoring
 fetch may retain its own raw snapshot and metadata. Atlas distinguishes repeated
@@ -285,8 +288,27 @@ Before processing real employee or payroll data, Atlas would need:
   production records.
 - Future-rule reevaluation is operator-triggered; there is no scheduler.
 - Retroactive replay is documented but not fully implemented.
-- The baseline rules come from the assignment specification rather than a saved
-  2026-09-16 source snapshot.
+- Historical baseline rates are unverified and only used in the explicitly simulated replay.
+- The current rate cards are parsed alongside notices. Missing publication dates remain null; effective dates never stand in for publication dates.
+- Live source evidence is preserved under evidence/live_sources, with proposals awaiting human approval.
 
 These limitations are explicit so unsupported cases remain visible instead of
 producing false compliance assurance.
+
+
+
+## Hosted prototype
+
+The browser executes the exact Python engine, extractor, and approval workflow in
+Pyodide. JavaScript handles presentation; it does not decide employee compliance.
+A server endpoint retrieves only the two fixed source URLs. Each anonymous visitor
+receives an isolated opaque session cookie. D1 stores append-only session revisions
+and rejects stale writes. The export contains snapshots, proposals, registry,
+evaluations, and audit events. This persistence is a demo convenience, not a trusted
+payroll backend: a modified client could submit altered session data. Production
+would move execution and validation server-side and authenticate reviewers.
+
+Evaluation decisions remain deterministic. Evaluation timestamps record execution
+in UTC; callers may inject a fixed timezone-aware clock for controlled replay.
+Current-rate cards do not state a publication date: proposals disclose null
+publication dates and require a reviewer note before approval through the web UI.

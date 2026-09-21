@@ -1,9 +1,9 @@
 # Submission verification and audit evidence
 
-This package was generated from source commit
-`fcab9dd9476db4ec1da011d71657206be7c8257c`. The existing automated tests passed
-locally: **55 passed**. See [the test run record](test_results.txt) for the command,
-environment, and captured output.
+This package was regenerated from the final submission working tree on
+2026-09-21. The automated test suite passed locally: **61 passed**. See
+[the test run record](test_results.txt) for the command, environment, and
+captured output. GitHub records the immutable commit that contains this package.
 
 ## Reproduce the checks
 
@@ -34,7 +34,7 @@ python -m atlas_compliance.demo --output evidence/change_replay
 | [Before metadata](change_replay/snapshots/asteria_federal/20261215T120000.000000Z.metadata.json) / [after metadata](change_replay/snapshots/asteria_federal/20261215T120500.000000Z.metadata.json) | Source URL, simulated fetch time, and raw-content SHA-256 |
 | [Change record](change_replay/changes/asteria_federal/20261215T120500.000000Z.change.json) | Linked snapshots, hashes, and readable text diff |
 | [Proposal](change_replay/proposed_rules.json) | Extracted rule, evidence, and recorded review outcome |
-| [Approved registry](change_replay/approved_rules.json) | Preserved baseline rules plus approved AFWA-2026-0042, 13.25 AST/hour effective 2027-01-01 |
+| [Approved registry](change_replay/approved_rules.json) | Preserved simulated baseline rules plus approved AFWA-2026-0042, 13.25 AST/hour effective 2027-01-01 |
 | [Audit trail](change_replay/audit.jsonl) | Interpretation, proposal creation, explicit simulated approval, rule append, and reevaluation |
 | [Employee reevaluation](change_replay/reevaluation.json) | Before/after decisions and shortfalls for the 48 supplied synthetic employees |
 
@@ -48,9 +48,12 @@ by the demo. Running it requires no network and leaves `data/approved_rules.json
 unchanged.
 
 The package demonstrates the federal change workflow; the source monitor is
-configured for both assessment sites. It does not establish current live-source
-availability or repair the documented baseline evidence limitations. Baseline
-source snapshot paths and hashes remain null in the copied registry.
+configured for both assessment sites. Separately, [live_sources](live_sources/)
+contains successful snapshots, sidecar metadata, audit events, and unapproved
+proposals fetched from both designated assessment URLs on 2026-09-21. Those
+records are evidence only: no live proposal was silently approved. Baseline
+snapshot paths and hashes remain null because the replay baselines are explicitly
+simulated inputs.
 
 Snapshot paths in snapshot metadata and the change record are relative to
 `evidence/change_replay/`. Proposal and approved-rule snapshot paths are relative

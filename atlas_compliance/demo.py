@@ -49,7 +49,7 @@ def run_demo(
     output_dir: Path,
     *,
     fixture_dir: Path = Path("demo/fixtures"),
-    baseline_registry: Path = Path("data/approved_rules.json"),
+    baseline_registry: Path = Path("data/demo_baseline_rules.json"),
     employees_path: Path = Path("data/synthetic_employee_system_of_record.xlsx"),
 ) -> dict[str, object]:
     """Run the full workflow against tracked fictional fixtures.
@@ -175,3 +175,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

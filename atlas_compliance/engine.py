@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from datetime import date, datetime, time, timezone
+from datetime import date, datetime, timezone
+from dataclasses import replace
 from decimal import Decimal, ROUND_HALF_UP
 
 from .models import DecisionState, Employee, EvaluationResult, MinimumWageRule
@@ -28,6 +29,12 @@ def _result(
     shortfall: Decimal | None = None,
     weekly: Decimal | None = None,
 ) -> EvaluationResult:
+    if actual is None:
+        if employee.pay_basis == "Hourly":
+            actual = employee.hourly_rate_ast
+        elif (employee.pay_basis == "Annual Salary" and employee.annual_salary_ast is not None
+              and employee.scheduled_hours_per_week is not None and employee.scheduled_hours_per_week > 0):
+            actual = employee.annual_salary_ast / (WEEKS_PER_YEAR * employee.scheduled_hours_per_week)
     return EvaluationResult(
         employee_id=employee.employee_id,
         evaluation_date=evaluation_date,
@@ -61,14 +68,11 @@ def _result(
         hourly_shortfall=None if shortfall is None else _cents(shortfall),
         estimated_weekly_underpayment=None if weekly is None else _cents(weekly),
         explanation=tuple(trace),
-        # A deterministic timestamp preserves reproducibility for identical inputs.
-        evaluation_timestamp=datetime.combine(
-            evaluation_date, time.min, tzinfo=timezone.utc
-        ),
+        evaluation_timestamp=datetime.now(timezone.utc),
     )
 
 
-def evaluate_employee(
+def _evaluate_employee(
     employee: Employee,
     rules: list[MinimumWageRule],
     evaluation_date: date,
@@ -168,6 +172,8 @@ def evaluate_employee(
             key=lambda rule: (rule.jurisdiction, rule.effective_date, rule.rule_id),
         )
     )
+    superseded = {rule.supersedes_rule_id for rule in effective_rules if rule.supersedes_rule_id}
+    effective_rules = tuple(rule for rule in effective_rules if rule.rule_id not in superseded)
     latest_by_jurisdiction: dict[str, list[MinimumWageRule]] = {}
     for name in eligible_jurisdictions:
         jurisdiction_rules = [
@@ -320,3 +326,13 @@ def evaluate_employee(
         shortfall=raw_shortfall,
         weekly=raw_shortfall * employee.scheduled_hours_per_week,
     )
+
+
+
+def evaluate_employee(employee: Employee, rules: list[MinimumWageRule], evaluation_date: date, *, evaluated_at: datetime | None = None) -> EvaluationResult:
+    """Deterministic decision plus the real execution time (injectable for replay)."""
+    timestamp = evaluated_at or datetime.now(timezone.utc)
+    if timestamp.tzinfo is None:
+        raise ValueError("Evaluation timestamp must be timezone-aware")
+    return replace(_evaluate_employee(employee, rules, evaluation_date),
+                   evaluation_timestamp=timestamp.astimezone(timezone.utc))

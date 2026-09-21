@@ -1,4 +1,6 @@
 {
+  "simulation": true,
+  "simulation_baseline": "data/demo_baseline_rules.json",
   "decision_summary": {
     "COMPLIANT": 16,
     "NON_COMPLIANT": 32
@@ -853,70 +855,7 @@
       "employee_id": "AST-0020",
       "estimated_weekly_underpayment": "0.00",
       "evaluation_date": "2026-09-16",
-      "evaluation_timestamp": "2026-09-16T00:00:00+00:00",
-      "explanation": [
-        "Evaluation date: 2026-09-16.",
-        "Resolved work jurisdiction: Federal Territory.",
-        "Effective candidate rules: AFWA-MW-2026.1.",
-        "Controlling rule AFWA-MW-2026.1 is the highest applicable rate at 12.82 AST/hour.",
-        "Used stated hourly wage: 15.17 AST/hour.",
-        "Actual hourly wage meets or exceeds the controlling rate."
-      ],
-      "hourly_shortfall": "0.00",
-      "work_jurisdiction": "Federal Territory"
-    },
-    {
-      "actual_hourly_wage": "16.65",
-      "candidate_applicable_rules": [
-        {
-          "amount": "12.82",
-          "coverage": "Covered, nonexempt employees",
-          "currency": "AST",
-          "effective_date": "2026-09-16",
-          "evidence_text": "Assignment-provided approved baseline: 12.82 AST per hour effective 2026-09-16.",
-          "jurisdiction": "Asteria Federal",
-          "proposal_id": null,
-          "rule_id": "AFWA-MW-2026.1",
-          "source_hash": null,
-          "source_snapshot_path": null,
-          "source_url": "https://asterian-federal-wage-site.vercel.app/",
-          "unit": "hour"
-        }
-      ],
-      "controlling_evidence_text": "Assignment-provided approved baseline: 12.82 AST per hour effective 2026-09-16.",
-      "controlling_jurisdiction": "Asteria Federal",
-      "controlling_minimum_wage": "12.82",
-      "controlling_proposal_id": null,
-      "controlling_rule_version": "AFWA-MW-2026.1",
-      "controlling_source_hash": null,
-      "controlling_source_snapshot_path": null,
-      "controlling_source_url": "https://asterian-federal-wage-site.vercel.app/",
-      "currency": "AST",
-      "decision_state": "COMPLIANT",
-      "employee_id": "AST-0021",
-      "estimated_weekly_underpayment": "0.00",
-      "evaluation_date": "2026-09-16",
-      "evaluation_timestamp": "2026-09-16T00:00:00+00:00",
-      "explanation": [
-        "Evaluation date: 2026-09-16.",
-        "Resolved work jurisdiction: Federal Territory.",
-        "Effective candidate rules: AFWA-MW-2026.1.",
-        "Controlling rule AFWA-MW-2026.1 is the highest applicable rate at 12.82 AST/hour.",
-        "Prototype salary conversion: annual salary / (52 * 20.0 scheduled weekly hours) = 16.65 AST/hour.",
-        "Actual hourly wage meets or exceeds the controlling rate."
-      ],
-      "hourly_shortfall": "0.00",
-      "work_jurisdiction": "Federal Territory"
-    },
-    {
-      "actual_hourly_wage": "16.03",
-      "candidate_applicable_rules": [
-        {
-          "amount": "12.82",
-          "coverage": "Covered, nonexempt employees",
-          "currency": "AST",
-          "effective_date": "2026-09-16",
-          "evidence_text": "Assignment-provided approved baseline: 12.82 AST per hour effective 2026-09-16.",
+      "evaluation_timestamp": "2026-09-16T00:00:00+er hour effective 2026-09-16.",
           "jurisdiction": "Asteria Federal",
           "proposal_id": null,
           "rule_id": "AFWA-MW-2026.1",

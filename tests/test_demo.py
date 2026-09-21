@@ -23,7 +23,7 @@ def demo_output() -> Path:
 
 
 def test_reproducible_demo_runs_full_workflow(demo_output: Path) -> None:
-    baseline = Path("data/approved_rules.json").read_bytes()
+    baseline = Path("data/demo_baseline_rules.json").read_bytes()
     summary = run_demo(demo_output)
     assert summary["simulation"] is True
     assert summary["first_monitoring_state"] == "FIRST_SNAPSHOT"
@@ -34,7 +34,7 @@ def test_reproducible_demo_runs_full_workflow(demo_output: Path) -> None:
     assert summary["approved_effective_date"] == "2027-01-01"
     assert summary["targeted_employee_count"] == 48
     assert summary["changed_result_count"] > 0
-    assert Path("data/approved_rules.json").read_bytes() == baseline
+    assert Path("data/demo_baseline_rules.json").read_bytes() == baseline
 
     audit_events = [
         json.loads(line)
@@ -44,6 +44,7 @@ def test_reproducible_demo_runs_full_workflow(demo_output: Path) -> None:
     ]
     assert [event["event_type"] for event in audit_events] == [
         "SOURCE_INTERPRETED",
+        "PROPOSAL_CREATED",
         "PROPOSAL_CREATED",
         "PROPOSAL_REVIEWED",
         "RULE_APPROVED",

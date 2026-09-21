@@ -64,7 +64,7 @@ def paths(workdir: Path) -> tuple[Path, Path, Path]:
     registry_path = workdir / "approved.json"
     audit_path = workdir / "audit.jsonl"
     registry_path.write_text(
-        Path("data/approved_rules.json").read_text(encoding="utf-8"),
+        Path("data/demo_baseline_rules.json").read_text(encoding="utf-8"),
         encoding="utf-8",
     )
     return proposal_path, registry_path, audit_path
@@ -305,7 +305,7 @@ def test_reevaluation_uses_engine_and_audits_minimized_results(
 
 
 def test_earlier_date_does_not_apply_2026_rule() -> None:
-    rules = load_rules(Path("data/approved_rules.json"))
+    rules = load_rules(Path("data/demo_baseline_rules.json"))
     result = evaluate_employee(
         sample_employee("Federal Territory", Decimal("20")), rules, date(2026, 9, 15)
     )
@@ -437,3 +437,4 @@ def test_audit_timestamps_are_utc(paths: tuple[Path, Path, Path]) -> None:
     events = [json.loads(line) for line in audit.read_text(encoding="utf-8").splitlines()]
     assert events
     assert all(event["timestamp"].endswith("+00:00") for event in events)
+

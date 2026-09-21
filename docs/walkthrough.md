@@ -1,7 +1,11 @@
 # Atlas Reviewer Walkthrough
 
-This script is designed for a 7–9 minute recorded walkthrough or live demo. Run
-all commands from the repository root in PowerShell.
+This script is designed for a 7–9 minute recorded walkthrough or live demo. Open
+the hosted prototype first, then use the repository commands below for the
+deterministic engine and evidence. Run commands from the repository root.
+
+Hosted prototype:
+<https://atlas-compliance-geethik.geethikkancharla99.chatgpt.site>
 
 ## Before recording
 
@@ -19,7 +23,7 @@ Remove-Item -LiteralPath demo_output -Recurse -Force -ErrorAction SilentlyContin
 
 Only run that cleanup command from the Atlas repository root.
 
-## 0:00–0:45 — Product framing
+## 0:00–1:00 — Product framing
 
 Suggested narration:
 
@@ -29,20 +33,27 @@ Suggested narration:
 > evaluate affected employees. Source interpretation can never directly decide
 > employee compliance.
 
-Show:
+Show the hosted prototype's overview and explain its two isolated workspaces:
+
+- **Live evidence** starts without approved rules and therefore abstains with
+  `INSUFFICIENT_DATA` until a person approves a captured proposal.
+- **Simulated replay** contains labeled baseline rules so the complete review,
+  activation, and reevaluation lifecycle can be demonstrated safely.
+
+Then show:
 
 - `README.md`
 - `docs/research_memo.md`
 - the package layout under `atlas_compliance/`
 
-## 0:45–1:45 — Deterministic employee evaluation
+## 1:00–2:00 — Deterministic employee evaluation
 
 Run:
 
 ```powershell
 .venv\Scripts\python.exe -m atlas_compliance.cli `
   --employees data/synthetic_employee_system_of_record.xlsx `
-  --rules data/approved_rules.json `
+  --rules data/demo_baseline_rules.json `
   --evaluation-date 2026-09-16 `
   --output outputs/compliance_results_2026-09-16.json `
   --format json
@@ -58,10 +69,12 @@ Point out:
 - the result identifies the controlling rule, source URL, and evidence; and
 - the employee loader never copies unrelated PII.
 
-Explain why a 2025 evaluation returns `INSUFFICIENT_DATA`: the registry has no
-approved rule effective in 2025, and Atlas refuses to invent one.
+Explain that this command is a labeled simulation. The real
+`data/approved_rules.json` starts empty, so a live evaluation returns
+`INSUFFICIENT_DATA` until an operator approves source-backed evidence. Atlas
+refuses to invent a historical rule.
 
-## 1:45–2:45 — Monitoring and immutable evidence
+## 2:00–3:00 — Monitoring and immutable evidence
 
 Show `atlas_compliance/monitoring.py` and explain:
 
@@ -75,7 +88,7 @@ Show `atlas_compliance/monitoring.py` and explain:
 Do not depend on live websites during the recorded demonstration. The tracked
 replay fixtures make the demo reproducible.
 
-## 2:45–5:30 — Full simulated change lifecycle
+## 3:00–5:45 — Full simulated change lifecycle
 
 Run:
 
@@ -118,10 +131,10 @@ Explain the stages:
 7. The original deterministic engine produces before/after results.
 8. The audit trail links interpretation, proposal, approval, and reevaluation.
 
-Emphasize that the replay copies `data/approved_rules.json`; it never modifies the
-real registry.
+Emphasize that the replay copies `data/demo_baseline_rules.json`; it never
+modifies the real approved registry.
 
-## 5:30–6:20 — Effective dates and precedence
+## 5:45–6:30 — Effective dates and precedence
 
 Suggested narration:
 
@@ -134,7 +147,7 @@ Suggested narration:
 
 Reference the effective-date and conflict tests in `tests/test_milestone3.py`.
 
-## 6:20–7:10 — Safety and uncertainty
+## 6:30–7:15 — Safety and uncertainty
 
 Explain:
 
@@ -145,7 +158,7 @@ Explain:
   not fabricated; and
 - Atlas prefers review or insufficient data over a false compliance pass.
 
-## 7:10–8:00 — Tradeoffs and next production steps
+## 7:15–8:00 — Tradeoffs and next production steps
 
 Discuss one possible false positive:
 

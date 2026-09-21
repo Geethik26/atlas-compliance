@@ -90,3 +90,4 @@ def load_employees(path: Path) -> list[Employee]:
         return employees
     finally:
         workbook.close()
+

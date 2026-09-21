@@ -33,6 +33,8 @@ def load_rules(path: Path) -> list[MinimumWageRule]:
             raise ValueError(f"Rule {index} is missing required fields")
         try:
             rule = MinimumWageRule(
+                supersedes_rule_id=item.get("supersedes_rule_id"),
+                publication_date=item.get("publication_date"),
                 jurisdiction=str(item["jurisdiction"]),
                 amount=Decimal(str(item["amount"])),
                 currency=str(item["currency"]),
@@ -76,3 +78,4 @@ def load_rules(path: Path) -> list[MinimumWageRule]:
             raise ValueError(f"Rule {index} contains an empty required field")
         rules.append(rule)
     return rules
+
