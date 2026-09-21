@@ -213,6 +213,11 @@ def test_future_rule_approved_but_not_applied_early(
     assert early.controlling_rule_version == "AFWA-MW-2026.1"
     assert early.decision_state is DecisionState.COMPLIANT
     assert active.controlling_rule_version == "AFWA-2026-0042"
+    assert active.controlling_source_url == FEDERAL.url
+    assert active.controlling_source_snapshot_path == proposal.source_snapshot_path
+    assert active.controlling_source_hash == proposal.source_hash
+    assert active.controlling_evidence_text == proposal.evidence_text
+    assert active.controlling_proposal_id == proposal.proposal_id
     assert active.decision_state is DecisionState.NON_COMPLIANT
 
 

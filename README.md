@@ -4,6 +4,22 @@ Atlas is a deterministic prototype for evaluating minimum-wage compliance. This
 project contains a Python calculation engine, approved rule data, an XLSX loader,
 and a regulatory source monitoring and human-reviewed rule lifecycle.
 
+See [the regulatory research memo](docs/research_memo.md) for source authority,
+precedence, effective-date, correction, retroactivity, and operational reasoning.
+For submission and demonstration, see the
+[reviewer walkthrough](docs/walkthrough.md) and
+[submission notes](docs/submission_notes.md).
+
+Run the tracked fictional change replay to generate a complete, isolated evidence
+package without modifying the real approved registry:
+
+```powershell
+.venv\Scripts\python.exe -m atlas_compliance.demo --output demo_output
+```
+
+The replay fixtures live under `demo/fixtures/`. Generated evidence is written to
+the ignored `demo_output/` directory.
+
 ## Privacy boundary
 
 The loader uses an explicit 11-column allowlist. It does not copy or expose
@@ -44,6 +60,21 @@ that could affect a production compliance analysis.
   --rules data/approved_rules.json `
   --evaluation-date 2026-09-16
 ```
+
+Export a stable JSON or CSV report with the same deterministic results:
+
+```powershell
+.venv\Scripts\python.exe -m atlas_compliance.cli `
+  --employees data/synthetic_employee_system_of_record.xlsx `
+  --rules data/approved_rules.json `
+  --evaluation-date 2026-09-16 `
+  --output outputs/compliance_results_2026-09-16.json `
+  --format json
+```
+
+Use `--format csv` with a `.csv` output path for a flat export. Nested candidate
+rules and decision traces are JSON-encoded inside their CSV cells. Reports contain
+only compliance-result fields and employee IDs, never unrelated employee PII.
 
 ## Regulatory source monitoring
 

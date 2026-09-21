@@ -10,6 +10,7 @@ data/changes/
 data/proposed_rules.json
 data/audit.jsonl
 data/reevaluations/
+demo_output/
 .env
 *.db
 .DS_Store.env.*

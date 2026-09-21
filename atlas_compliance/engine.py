@@ -42,6 +42,21 @@ def _result(
             None if controlling is None else controlling.jurisdiction
         ),
         controlling_rule_version=None if controlling is None else controlling.rule_id,
+        controlling_source_url=(
+            None if controlling is None else controlling.source_url
+        ),
+        controlling_source_snapshot_path=(
+            None if controlling is None else controlling.source_snapshot_path
+        ),
+        controlling_source_hash=(
+            None if controlling is None else controlling.source_hash
+        ),
+        controlling_evidence_text=(
+            None if controlling is None else controlling.evidence_text
+        ),
+        controlling_proposal_id=(
+            None if controlling is None else controlling.proposal_id
+        ),
         decision_state=state,
         hourly_shortfall=None if shortfall is None else _cents(shortfall),
         estimated_weekly_underpayment=None if weekly is None else _cents(weekly),

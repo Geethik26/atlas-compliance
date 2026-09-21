@@ -3,11 +3,13 @@
 from dataclasses import replace
 from datetime import date
 from decimal import Decimal
+from pathlib import Path
 
 import pytest
 
 from atlas_compliance.engine import evaluate_employee
 from atlas_compliance.models import DecisionState, Employee, MinimumWageRule
+from atlas_compliance.rules import load_rules
 
 EVALUATION_DATE = date(2026, 9, 16)
 
@@ -185,3 +187,19 @@ def test_conflicting_currency_requires_review(
         replace(employee, currency="USD"), rules, EVALUATION_DATE
     )
     assert result.decision_state is DecisionState.REVIEW_REQUIRED
+
+
+def test_seeded_rule_provenance_is_exposed_in_result(employee: Employee) -> None:
+    rules = load_rules(Path("data/approved_rules.json"))
+    result = evaluate_employee(employee, rules, EVALUATION_DATE)
+    serialized = result.to_dict()
+    assert serialized["controlling_source_url"] == (
+        "https://asterian-federal-wage-site.vercel.app/"
+    )
+    assert serialized["controlling_evidence_text"] == (
+        "Assignment-provided approved baseline: 12.82 AST per hour effective "
+        "2026-09-16."
+    )
+    assert serialized["candidate_applicable_rules"][0]["source_url"] == (
+        serialized["controlling_source_url"]
+    )

@@ -10,6 +10,7 @@ from pathlib import Path
 
 from .engine import evaluate_employee
 from .loader import load_employees
+from .reporting import write_csv_report, write_json_report
 from .rules import load_rules
 
 
@@ -19,6 +20,8 @@ def main() -> None:
     parser.add_argument("--employees", type=Path, required=True)
     parser.add_argument("--rules", type=Path, required=True)
     parser.add_argument("--evaluation-date", type=date.fromisoformat, required=True)
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--format", choices=("json", "csv"), default="json")
     args = parser.parse_args()
 
     rules = load_rules(args.rules)
@@ -30,6 +33,12 @@ def main() -> None:
         print(json.dumps(result.to_dict(), sort_keys=True))
     counts = Counter(result.decision_state.value for result in results)
     print(json.dumps({"summary": dict(sorted(counts.items()))}, sort_keys=True))
+    if args.output is not None:
+        if args.format == "json":
+            write_json_report(results, args.output)
+        else:
+            write_csv_report(results, args.output)
+        print(f"Wrote {len(results)} results to {args.output}")
 
 
 if __name__ == "__main__":

@@ -46,8 +46,13 @@ class MinimumWageRule:
     effective_date: date
     rule_id: str
     coverage: str
+    source_url: str | None = None
+    source_snapshot_path: str | None = None
+    source_hash: str | None = None
+    evidence_text: str | None = None
+    proposal_id: str | None = None
 
-    def public_dict(self) -> dict[str, str]:
+    def public_dict(self) -> dict[str, str | None]:
         """Return stable fields suitable for an audit trace."""
         return {
             "jurisdiction": self.jurisdiction,
@@ -57,6 +62,11 @@ class MinimumWageRule:
             "effective_date": self.effective_date.isoformat(),
             "rule_id": self.rule_id,
             "coverage": self.coverage,
+            "source_url": self.source_url,
+            "source_snapshot_path": self.source_snapshot_path,
+            "source_hash": self.source_hash,
+            "evidence_text": self.evidence_text,
+            "proposal_id": self.proposal_id,
         }
 
 
@@ -73,6 +83,11 @@ class EvaluationResult:
     controlling_minimum_wage: Decimal | None
     controlling_jurisdiction: str | None
     controlling_rule_version: str | None
+    controlling_source_url: str | None
+    controlling_source_snapshot_path: str | None
+    controlling_source_hash: str | None
+    controlling_evidence_text: str | None
+    controlling_proposal_id: str | None
     decision_state: DecisionState
     hourly_shortfall: Decimal | None
     estimated_weekly_underpayment: Decimal | None
@@ -96,6 +111,11 @@ class EvaluationResult:
             "controlling_minimum_wage": money(self.controlling_minimum_wage),
             "controlling_jurisdiction": self.controlling_jurisdiction,
             "controlling_rule_version": self.controlling_rule_version,
+            "controlling_source_url": self.controlling_source_url,
+            "controlling_source_snapshot_path": self.controlling_source_snapshot_path,
+            "controlling_source_hash": self.controlling_source_hash,
+            "controlling_evidence_text": self.controlling_evidence_text,
+            "controlling_proposal_id": self.controlling_proposal_id,
             "decision_state": self.decision_state.value,
             "hourly_shortfall": money(self.hourly_shortfall),
             "estimated_weekly_underpayment": money(

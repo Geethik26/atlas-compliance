@@ -199,6 +199,7 @@ def approve_proposal(
         "source_url": proposal.source_url,
         "source_snapshot_path": proposal.source_snapshot_path,
         "source_hash": proposal.source_hash,
+        "evidence_text": proposal.evidence_text,
         "approved_at": timestamp.isoformat(),
         "reviewer_note": reviewer_note,
     }

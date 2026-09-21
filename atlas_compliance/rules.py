@@ -40,6 +40,25 @@ def load_rules(path: Path) -> list[MinimumWageRule]:
                 effective_date=date.fromisoformat(str(item["effective_date"])),
                 rule_id=str(item["rule_id"]),
                 coverage=str(item["coverage"]),
+                source_url=(
+                    None if item.get("source_url") is None else str(item["source_url"])
+                ),
+                source_snapshot_path=(
+                    None
+                    if item.get("source_snapshot_path") is None
+                    else str(item["source_snapshot_path"])
+                ),
+                source_hash=(
+                    None if item.get("source_hash") is None else str(item["source_hash"])
+                ),
+                evidence_text=(
+                    None
+                    if item.get("evidence_text") is None
+                    else str(item["evidence_text"])
+                ),
+                proposal_id=(
+                    None if item.get("proposal_id") is None else str(item["proposal_id"])
+                ),
             )
         except (InvalidOperation, ValueError) as exc:
             raise ValueError(f"Rule {index} has invalid data") from exc
