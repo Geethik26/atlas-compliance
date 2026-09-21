@@ -8,9 +8,11 @@ source monitoring through human-reviewed rule approval and deterministic
 employee reevaluation.
 
 The implementation intentionally favors a trustworthy working slice over
-production breadth. It includes a hosted review UI and isolated durable demo sessions. It does not include enterprise authentication or a production scheduler.
+production breadth. It includes a hosted review UI and isolated, browser-local,
+versioned demo workspaces. It does not include enterprise authentication or a
+production scheduler.
 
-Live prototype: <https://atlas-compliance.geethikkancharla99.chatgpt.site>
+Live prototype: <https://atlas-compliance-pi.vercel.app/>
 
 ## Time spent
 

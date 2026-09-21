@@ -4,12 +4,15 @@ Atlas is a deterministic prototype for evaluating minimum-wage compliance. This
 project contains a Python calculation engine, approved rule data, an XLSX loader,
 and a regulatory source monitoring and human-reviewed rule lifecycle.
 
-**Live prototype:** <https://atlas-compliance.geethikkancharla99.chatgpt.site>
+**Live prototype:** <https://atlas-compliance-pi.vercel.app/>
 
 The prototype is public for assessment review and uses fictional data only. Open
 **Simulated replay** to stage, review, approve, and audit a complete change. Open
 **Live sources** to inspect captured evidence; live proposals are never approved
 automatically.
+
+The public Vercel deployment uses browser-local, versioned demo persistence.
+Export evidence before clearing site data or switching browsers.
 
 See [the regulatory research memo](docs/research_memo.md) for source authority,
 precedence, effective-date, correction, retroactivity, and operational reasoning.

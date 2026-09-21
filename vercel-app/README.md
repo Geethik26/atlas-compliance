@@ -2,6 +2,8 @@
 
 This is the Vercel-native deployment of the Atlas assessment prototype.
 
+**Live prototype:** <https://atlas-compliance-pi.vercel.app/>
+
 - Standard Next.js application and API route
 - Deterministic Python compliance engine executed in the browser with pinned
   Pyodide 0.27.7 CDN assets

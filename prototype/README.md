@@ -1,7 +1,8 @@
-# Hosted prototype source
+# Legacy hosted prototype source
 
-This directory mirrors the assessment-specific code deployed at
-<https://atlas-compliance.geethikkancharla99.chatgpt.site>.
+This directory preserves the earlier Sites-specific deployment source for
+review. The canonical public deployment is the Vercel application in
+`vercel-app/`: <https://atlas-compliance-pi.vercel.app/>.
 
 The UI executes the same deterministic Python engine in a self-hosted Pyodide
 runtime. `/api/session` stores append-only anonymous session revisions in D1,
