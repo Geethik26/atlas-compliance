@@ -20,3 +20,7 @@ demo_output/
 *.crt
 credentials*
 secrets*
+node_modules/
+.next/
+.vercel/
+npm-debug.log*
